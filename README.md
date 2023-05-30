@@ -5,7 +5,6 @@ ___________
 ```php
 namespace App\Validator;
 
-use App\Constants\ErrorCode;
 use Fengdangxing\ValidatorQuote\ValidatorQuote;
 use Fengdangxing\ValidatorQuote\ValidatorQuoteInterface;
 
@@ -47,8 +46,6 @@ class PublishValidator extends ValidatorQuote
 ```php
 namespace App\Controller;
 
-use App\Model\es\BatchEsModel;
-use App\Model\PublishBatchModel;
 use Fengdangxing\ValidatorQuote\Annotation\ValidatorQuote;
 
 class IndexController extends AbstractController
