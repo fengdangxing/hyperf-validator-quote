@@ -6,6 +6,7 @@
     "validator",
     "hyperf"
   ],
+  "license": "MIT",
   "minimum-stability": "dev",
   "authors": [
     {
