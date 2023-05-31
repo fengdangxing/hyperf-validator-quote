@@ -1,6 +1,26 @@
 ####简版使用-主要增加自定义方法 放在验证类处理
 [validation](https://github.com/hyperf/validation)
 ___________
+
+```php
+#配置路径 config/annotations.php 没有改文件新建
+return [
+    'scan' => [
+        'paths' => [
+            BASE_PATH . '/app',
+            BASE_PATH . '/vendor/fengdangxing',//增加该配置
+        ],
+        'ignore_annotations' => [
+            'mixin',
+            'Notes',
+            'Author',
+            'Data',
+            'Date'
+        ],
+    ],
+];
+```
+
 #继承基础类
 ```php
 namespace App\Validator;
