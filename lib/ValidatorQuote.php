@@ -41,6 +41,15 @@ class ValidatorQuote
         }
     }
 
+    public static function validatorStatic(array $parmas, array $rules, array $messages)
+    {
+        $class = new self();
+        $class->parmas = $parmas;
+        $class->rules = $rules;
+        $class->messages = $messages;
+        $class->validator();
+    }
+
     public function filter($params)
     {
         $this->parmas = $params;
