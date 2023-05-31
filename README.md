@@ -48,6 +48,7 @@ class PublishValidator extends ValidatorQuote
     }
 }
 
+
 ```
 
 #控制器
