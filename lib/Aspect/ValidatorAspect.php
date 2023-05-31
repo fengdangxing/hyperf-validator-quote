@@ -29,7 +29,7 @@ class ValidatorAspect extends AbstractAspect
             if ($proceedingJoinPoint->className == $anno['class'] && $proceedingJoinPoint->methodName == $anno['method']) {
                 [$class, $className] = explode("::", $anno['annotation']->class);
                 $validator = new $class();
-                $validator->scenes($anno['annotation']->scene)->validator($request->all());
+                $validator->scenes($anno['annotation']->scene)->filter($request->all())->validator();
             }
         }
         $result = $proceedingJoinPoint->process();

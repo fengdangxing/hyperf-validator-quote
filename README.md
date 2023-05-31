@@ -3,10 +3,12 @@
 ___________
 #继承基础类
 ```php
+<?php
+
 namespace App\Validator;
 
 use Fengdangxing\ValidatorQuote\ValidatorQuote;
-use Fengdangxing\ValidatorQuote\ValidatorQuoteInterface;
+use Hyperf\Validation\Validator;
 
 
 class PublishValidator extends ValidatorQuote
@@ -28,22 +30,29 @@ class PublishValidator extends ValidatorQuote
         'id' => 'required',
     ];
 
-     protected $messages = [
-            'merchant_site_id.required' => "1000|merchant_site_id is empty",//code|message
-            'id.required' => "merchant_site_id is empty",
-            'mark.max' => "merchant_site_id is empty",
-            'merchant_page_id.check_type_empty' => "merchant_site_id is empty",
-            'merchant_site_id.check_publish' => "merchant_site_id is empty"
-        ];
-    public function check_publish($attribute, $value, $parameters, ValidatorQuoteInterface $validator)
+    protected $messages = [
+        'merchant_site_id.required' => "1000|merchant_site_id is empty",//code|message
+        'id.required' => "1001|id is empty",
+        'mark.max' => "1002|mark is empty",
+        'merchant_page_id.check_type_empty' => "1003|merchant_page_id is empty",
+        'merchant_site_id.check_publish' => "1004|check_publish"
+    ];
+
+    protected $filter = [
+        'mark' => 'fliter_sql|fliter_str',
+    ];
+
+    public function check_publish($attribute, $value, $parameters, Validator $validator)
     {
         return true;
     }
 }
+
 ```
 
 #控制器
 ```php
+<?php
 namespace App\Controller;
 
 use Fengdangxing\ValidatorQuote\Annotation\ValidatorQuote;

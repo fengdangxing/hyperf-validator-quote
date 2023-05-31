@@ -2,7 +2,6 @@
 
 namespace Fengdangxing\ValidatorQuote;
 
-use Fengdangxing\ValidatorQuote\Exception\ValidatorQuoteException;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Validation\Contract\ValidatorFactoryInterface;
 
@@ -13,53 +12,76 @@ class ValidatorQuote
      * @var ValidatorFactoryInterface
      */
     protected $validationFactory;
+
+    /**
+     * @Inject()
+     * @var Filter
+     */
+    protected $filterClass;
+
     protected $scenes = []; // 场景设置
     protected $extendList = []; // 自定义方法验证
     protected $rules = [];//规则
     protected $messages = [];//提示信息
+    protected $filter = [];//过滤
 
-    private $KeyScenes; //当前场景
-
+    private $keyScenes; //当前场景
     const ERROR_SEPARATOR = '|';
+    public $parmas = [];//参数
 
-    public function validator(array $params, array $rules = [], array $messages = [])
+    public function validator()
     {
-        if (!empty($rules)) {
-            $this->rules = $rules;
-        }
-        if (!empty($messages)) {
-            $this->messages = $messages;
-        }
         $this->checkScenes();
         $this->setExtendList();
-        $validator = $this->validationFactory->make($params, $this->rules, $this->messages);
+        $validator = $this->validationFactory->make($this->parmas, $this->rules, $this->messages);
         if ($validator->fails()) {
             $error = $validator->errors()->first();
             [$code, $message] = explode(self::ERROR_SEPARATOR, $error);
-            throw new \Exception($message, $code);
+            throw new \Exception($message ?: $error, (int)$code);
         }
+    }
+
+    public function filter($params)
+    {
+        $this->parmas = $params;
+        if (!$this->filter) {
+            return $this;
+        }
+        $rulesKey = $this->scenes[$this->keyScenes] ?? [];
+        foreach ($this->filter as $key => $value) {
+            if ($rulesKey && !in_array($key, $rulesKey)) {
+                continue;
+            }
+            $more = explode(self::ERROR_SEPARATOR, $value);
+            foreach ($more as $v) {
+                if (!$v) {
+                    continue;
+                }
+                if (isset($params[$key])) {
+                    $params[$key] = $this->filterClass->$v($params[$key]);
+                }
+                $this->parmas = $params;
+            }
+        }
+
+        return $this;
     }
 
     public function scenes(string $key)
     {
         if ($key) {
-            $this->KeyScenes = $key;
+            $this->keyScenes = $key;
         }
         return $this;
     }
 
-    public static function error(int $code, string $message = null)
-    {
-        return $message . self::ERROR_SEPARATOR . $code;
-    }
-
     private function checkScenes()
     {
-        if (!$this->KeyScenes) {
+        if (!$this->keyScenes) {
             return false;
         }
-        $rulesKey = $this->scenes[$this->KeyScenes] ?? [];
-        if (count($rulesKey)) {
+        $rulesKey = $this->scenes[$this->keyScenes] ?? [];
+        if (!count($rulesKey)) {
             return false;
         }
         foreach ($this->rules as $key => $val) {
@@ -75,7 +97,7 @@ class ValidatorQuote
             return false;
         }
         foreach ($this->extendList as $val) {
-            $this->validationFactory->extend($val, function ($attribute, $value, $parameters, ValidatorQuoteInterface $validator) use ($val) {
+            $this->validationFactory->extend($val, function ($attribute, $value, $parameters, $validator) use ($val) {
                 return call_user_func([$this, $val], $attribute, $value, $parameters, $validator);
             });
         }
