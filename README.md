@@ -3,8 +3,6 @@
 ___________
 #继承基础类
 ```php
-<?php
-
 namespace App\Validator;
 
 use Fengdangxing\ValidatorQuote\ValidatorQuote;
@@ -53,7 +51,6 @@ class PublishValidator extends ValidatorQuote
 
 #控制器
 ```php
-<?php
 namespace App\Controller;
 
 use Fengdangxing\ValidatorQuote\Annotation\ValidatorQuote;
