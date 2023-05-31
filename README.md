@@ -78,7 +78,7 @@ use Fengdangxing\ValidatorQuote\Annotation\ValidatorQuote;
 class IndexController extends AbstractController
 {
     /**
-     * @ValidatorQuote(class="\App\Validator\PublishValidator::class",scene="publish")
+     * @VQ(class="\App\Validator\PublishValidator::class",scene="publish")
      */
     public function index()
     {
