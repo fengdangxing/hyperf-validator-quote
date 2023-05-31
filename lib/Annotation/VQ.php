@@ -10,7 +10,7 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
  * @Target({"METHOD"})
  */
 #[Attribute(Attribute::TARGET_METHOD)]
-class ValidatorQuote extends AbstractAnnotation
+class VQ extends AbstractAnnotation
 {
     public $class;//验证类名称(请输入全名称)
     public $scene;//场景
