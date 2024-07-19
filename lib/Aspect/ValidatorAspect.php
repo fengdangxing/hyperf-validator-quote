@@ -2,7 +2,7 @@
 
 namespace Fengdangxing\ValidatorQuote\Aspect;
 
-use Fengdangxing\ValidatorQuote\Annotation\ValidatorQuote;
+use Fengdangxing\ValidatorQuote\Annotation\VQ;
 use Hyperf\Di\Annotation\AnnotationCollector;
 use Hyperf\Di\Annotation\Aspect;
 use Hyperf\Di\Aop\AbstractAspect;
@@ -18,7 +18,7 @@ class ValidatorAspect extends AbstractAspect
     public $classes = [];
 
     public $annotations = [
-        ValidatorQuote::class,
+        VQ::class,
     ];
 
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
