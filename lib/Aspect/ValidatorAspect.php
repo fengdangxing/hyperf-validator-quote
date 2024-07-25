@@ -24,15 +24,20 @@ class ValidatorAspect extends AbstractAspect
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
     {
         $list = AnnotationCollector::getMethodsByAnnotation($this->annotations[0]);
-        $request = ApplicationContext::getContainer()->get(\Hyperf\HttpServer\Contract\RequestInterface::class);
         foreach ($list as $key => $anno) {
             if ($proceedingJoinPoint->className == $anno['class'] && $proceedingJoinPoint->methodName == $anno['method']) {
                 [$class, $className] = explode("::", $anno['annotation']->class);
                 $validator = new $class();
-                $validator->scenes($anno['annotation']->scene)->filter($request->all())->validator();
+                $validator->scenes($anno['annotation']->scene)->filter($this->getValidationData())->validator();
             }
         }
-        $result = $proceedingJoinPoint->process();
-        return $result;
+        return $proceedingJoinPoint->process();
+    }
+
+    protected function getValidationData(): array
+    {
+        $request = ApplicationContext::getContainer()->get(\Hyperf\HttpServer\Contract\RequestInterface::class);
+
+        return array_merge_recursive($request->all(), $request->getUploadedFiles());
     }
 }
